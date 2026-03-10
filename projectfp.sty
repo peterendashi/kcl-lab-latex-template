@@ -1,0 +1,111 @@
+% Package for creating front pages for project theses.
+% Adapted by Enda Shi (enda.shi@kcl.ac.uk) from the template implemented by Martin Helsø (martibhe@math.uio.no).
+% Version 10-03-2026.
+
+
+\NeedsTeXFormat{LaTeX2e}[1994/12/01]
+\ProvidesPackage{projectfp}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PACKAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{calc}
+\RequirePackage{graphicx}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{textcomp}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COMMANDS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Date of Experiment
+\newcommand{\dateofexperiment}[1]{\def\PFP@dateofexperiment{#1}}
+\dateofexperiment{Date of Experiment}
+
+%% Date of Report
+\newcommand{\dateofreport}[1]{\def\PFP@dateofreport{#1}}
+\dateofreport{Date of Report}
+
+%% Lab Partner
+\newcommand{\labpartner}[1]{\def\PFP@labpartner{#1}}
+\labpartner{Lab Partner}
+
+%% Experiment Conducted By (uses \author by default)
+\newcommand{\conductedby}[1]{\def\PFP@conductedby{#1}}
+\let\PFP@conductedby\@empty
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TITLE PAGE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\@ifclassloaded{memoir}
+{
+    \newcommand{\projectfrontpage}
+    {
+        \begin{titlingpage}
+            \printtitle
+        \end{titlingpage}
+    }
+}
+{
+    \newcommand{\projectfrontpage}
+    {
+        \begin{titlepage}
+            \printtitle
+        \end{titlepage}
+    }
+}
+
+\newcommand{\printtitle}
+{
+    \renewcommand{\sfdefault}{phv}
+    \sffamily
+    \fontsize{12}{14pt}
+    \selectfont
+
+    %% Top right corner: Date of Experiment and Date of Report
+    \noindent
+    \begin{minipage}[t]{0.5\textwidth}
+        \raggedright
+        \vspace{0pt}
+        ~
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \raggedleft
+        \vspace{0pt}
+        \textbf{Date of Experiment:} \PFP@dateofexperiment\\[3pt]
+        \textbf{Date of Report:} \PFP@dateofreport
+    \end{minipage}
+
+    %% Center vertically and horizontally: Title
+    \vfill
+    \begin{center}
+        {
+            \fontsize{24}{28pt}
+            \selectfont
+            \bfseries
+            \boldmath
+            \@title
+            \par
+        }
+    \end{center}
+    \vfill
+
+    %% Bottom left: Experiment Conducted by and Lab Partner
+    \noindent
+    \begin{minipage}[b]{0.6\textwidth}
+        \raggedright
+        \textbf{Experiment Conducted by:}
+        \ifx\PFP@conductedby\@empty
+            \@author
+        \else
+            \PFP@conductedby
+        \fi
+        \\[6pt]
+        \textbf{Lab Partner:} \PFP@labpartner
+    \end{minipage}
+    \vspace{10mm}
+}
+
+
+\endinput
