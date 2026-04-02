@@ -1,100 +1,111 @@
-\documentclass[a4paper, article, oneside, UKenglish]{memoir}
+\documentclass[10pt,oneside,ukenglish]{memoir}
 
+% ==============================================================================
+% 1. TOGGLE OUTPUT FORMAT (KINDLE VS A4)
+% ==============================================================================
+\newif\ifkindle
+\kindletrue % <--- CHANGE TO \kindlefalse FOR STANDARD A4 FORMATTING (change font back to 12pt for A4)
 
-%% Page geometry
-\usepackage[margin=1in]{geometry}
+\ifkindle
+  %% Page layout for Kindle-style output
+  \setstocksize{6.4in}{4.8in}
+  \settrimmedsize{6.4in}{4.8in}{*}
+  \settypeblocksize{5in}{4in}{*}
+  \setlrmargins{*}{*}{1}
+  \setulmargins{*}{*}{1}
+\else
+  %% Page layout for standard A4 output
+  \pagea4
+  \settypeblocksize{22cm}{15cm}{*}
+  \setlrmargins{*}{*}{1}
+  \setulmargins{*}{*}{1}
+\fi
+\checkandfixthelayout
 
+% ==============================================================================
+% 2. ENCODING, LANGUAGE, AND FONTS
+% ==============================================================================
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage[scaled]{beramono}
+\usepackage[final]{microtype}
+\renewcommand{\sfdefault}{phv}
 
-%% Title page
-\usepackage{projectfp}
+% ==============================================================================
+% 3. MATHEMATICS
+% ==============================================================================
+\usepackage{amsmath, amssymb, amsthm, mathtools, mathrsfs, thmtools}
 
-
-%% Encoding
-\usepackage[utf8]{inputenx} % Source code
-\usepackage[T1]{fontenc}    % PDF
-
-
-%% Fonts and typography
-\usepackage{lmodern}           % Latin Modern Roman
-\usepackage[scaled]{beramono}  % Bera Mono (Bitstream Vera Sans Mono)
-\renewcommand{\sfdefault}{phv} % Helvetica
-\usepackage[final]{microtype}  % Improved typography
-\renewcommand{\abstractnamefont}{\sffamily\bfseries}                 % Abstract
-\renewcommand*{\chaptitlefont}{\Large\bfseries\sffamily\raggedright} % Chapter
-\setsecheadstyle{\large\bfseries\sffamily\raggedright}               % Section
-\setsubsecheadstyle{\large\bfseries\sffamily\raggedright}            % Subsection
-\setsubsubsecheadstyle{\normalsize\bfseries\sffamily\raggedright}    % Subsubsection
-\setparaheadstyle{\normalsize\bfseries\sffamily\raggedright}         % Paragraph
-\setsubparaheadstyle{\normalsize\bfseries\sffamily\raggedright}      % Subparagraph
-
-%% Mathematics
-\usepackage{amssymb}   % Extra symbols
-\usepackage{amsthm}    % Theorem-like environments
-\usepackage{thmtools}  % Theorem-like environments
-\usepackage{mathtools} % Fonts and environments for mathematical formulae
-\usepackage{mathrsfs}  % Script font with \mathscr{}
-
-
-%% Miscellaneous
-\usepackage{graphicx}  % Tool for images
+% ==============================================================================
+% 4. GRAPHICS AND MISCELLANEOUS
+% ==============================================================================
+\usepackage{graphicx}
 \graphicspath{{figures/}}
-\usepackage{babel}     % Automatic translations
-\usepackage{csquotes}  % Quotes
-\usepackage{textcomp}  % Extra symbols
-\usepackage{listings}  % Typesetting code
-\usepackage[separate-uncertainty=true]{siunitx}   % SI units formatting
-\lstset{basicstyle = \ttfamily, frame = tb}
+\usepackage{csquotes}
+\usepackage{textcomp}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily, frame=tb}
 
-
-%% Bibliography
-\usepackage{mathscinet}
-\usepackage[backend    = biber,
-            sortcites  = true,
-            giveninits = true,
-            doi        = false,
-            isbn       = false,
-            url        = false,
-            sortlocale = nb_NO,
-            style      = alphabetic]{biblatex}
-\DeclareNameAlias{sortname}{family-given}
-\DeclareNameAlias{default}{family-given}
-\DeclareFieldFormat[article]{volume}{\bibstring{jourvol}\addnbspace#1}
-\DeclareFieldFormat[article]{number}{\bibstring{number}\addnbspace#1}
-\renewbibmacro*{volume+number+eid}
-{
-    \printfield{volume}
-    \setunit{\addcomma\space}
-    \printfield{number}
-    \setunit{\addcomma\space}
-    \printfield{eid}
-}
-\addbibresource{bibliography.bib}
-
-
-%% Cross references
+% ==============================================================================
+% 5. CROSS-REFERENCES
+% ==============================================================================
 \usepackage{varioref}
 \usepackage[pdfusetitle]{hyperref}
 \urlstyle{sf}
-\usepackage[nameinlink, capitalize, noabbrev]{cleveref}
+\usepackage[nameinlink,capitalize,noabbrev]{cleveref}
 \crefname{chapter}{Section}{Sections}
 
+% ==============================================================================
+% 6. DOCUMENT STYLING (MEMOIR MACROS)
+% ==============================================================================
+%% Chapter style
+\makechapterstyle{mychap}{
+  \renewcommand*{\chapnamefont}{\large\bfseries\fontfamily{phv}\selectfont}
+  \renewcommand*{\chapnumfont}{\large\bfseries\fontfamily{phv}\selectfont}
+  \renewcommand*{\chaptitlefont}{\fontsize{40}{42}\selectfont\bfseries\normalfont}
+  \renewcommand*{\printchaptername}{\chapnamefont\MakeUppercase{\chaptername}}
+  \renewcommand*{\printchapternum}{\chapnumfont\space\thechapter}
+  \renewcommand*{\afterchapternum}{\par\vskip 0.3\baselineskip}
+}
+\chapterstyle{mychap}
 
-%% Theorem-like environments
-\declaretheorem[style = plain, numberwithin = chapter]{theorem}
-\declaretheorem[style = plain,      sibling = theorem]{corollary}
-\declaretheorem[style = plain,      sibling = theorem]{lemma}
-\declaretheorem[style = plain,      sibling = theorem]{proposition}
-\declaretheorem[style = definition, sibling = theorem]{definition}
-\declaretheorem[style = definition, sibling = theorem]{example}
-\declaretheorem[style = remark,    numbered = no]{remark}
+%% Section headings
+\setsecheadstyle{\large\bfseries\fontfamily{phv}\selectfont}
+\setsubsecheadstyle{\normalsize\bfseries\fontfamily{phv}\selectfont}
+\setsubsubsecheadstyle{\normalsize\bfseries\fontfamily{phv}\selectfont}
+\setparaheadstyle{\normalsize\bfseries\fontfamily{phv}\selectfont}
+\setsubparaheadstyle{\normalsize\bfseries\fontfamily{phv}\selectfont}
 
+%% Running headers
+\renewcommand*{\chaptermark}[1]{\markboth{\chaptername\ \thechapter\space-\space #1}{}}
+\makepagestyle{myheadings}
+\makeevenhead{myheadings}{\small\bfseries\fontfamily{phv}\selectfont\leftmark}{}{\small\bfseries\fontfamily{phv}\selectfont\thepage}
+\makeoddhead{myheadings}{\small\bfseries\fontfamily{phv}\selectfont\leftmark}{}{\small\bfseries\fontfamily{phv}\selectfont\thepage}
+\makeevenfoot{myheadings}{}{}{}
+\makeoddfoot{myheadings}{}{}{}
+\pagestyle{myheadings}
 
+% ==============================================================================
+% 7. THEOREM ENVIRONMENTS
+% ==============================================================================
+\declaretheorem[style=plain,numberwithin=chapter]{theorem}
+\declaretheorem[style=plain,sibling=theorem]{corollary}
+\declaretheorem[style=plain,sibling=theorem]{lemma}
+\declaretheorem[style=plain,sibling=theorem]{proposition}
+\declaretheorem[style=definition,sibling=theorem]{definition}
+\declaretheorem[style=definition,sibling=theorem]{example}
+\declaretheorem[style=remark,numbered=no]{remark}
+\renewcommand{\qedsymbol}{\(\blacksquare\)}
+
+% ==============================================================================
+% 8. CUSTOM MATH MACROS
+% ==============================================================================
 %% Delimiters
-\DeclarePairedDelimiter{\p}{\lparen}{\rparen}   % Parenthesis
-\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace} % Set
-\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}   % Absolute value
-\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}  % Norm
-
+\DeclarePairedDelimiter{\p}{\lparen}{\rparen}
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
 
 %% Operators
 \newcommand{\diff}{\mathop{}\!\mathrm{d}}
@@ -104,18 +115,16 @@
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\Cov}{Cov}
 
+%% Blackboard bold shortcuts
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\A}{\mathbb{A}}
+\renewcommand{\P}{\mathbb{P}}
 
-%% New commands for sets
-\newcommand{\N}{\mathbb{N}}   % Natural numbers
-\newcommand{\Z}{\mathbb{Z}}   % Integers
-\newcommand{\Q}{\mathbb{Q}}   % Rational numbers
-\newcommand{\R}{\mathbb{R}}   % Real numbers
-\newcommand{\C}{\mathbb{C}}   % Complex numbers
-\newcommand{\A}{\mathbb{A}}   % Affine space
-\renewcommand{\P}{\mathbb{P}} % Projective space
-
-
-%% New commands for vectors
+%% Vector shortcuts
 \renewcommand{\a}{\mathbf{a}}
 \renewcommand{\b}{\mathbf{b}}
 \renewcommand{\c}{\mathbf{c}}
@@ -127,88 +136,25 @@
 \newcommand{\0}{\mathbf{0}}
 \newcommand{\1}{\mathbf{1}}
 
+\usepackage[4CCP1300]{projectfp}
 
-%% Miscellaneous
-\renewcommand{\qedsymbol}{\(\blacksquare\)}
-
-
-%% Title page fields
-\title{Experiment Title}
+\title{Helpful Notes of Linear Algebra}
 \author{Enda Shi}
-\conductedby{Enda Shi}
-\dateofexperiment{DD-MM-YYYY}
-\dateofreport{\today}
-\labpartner{Insert Name Here}
-
+\lecturer{Dr. Francisco Rodriguez Fortuno}
 
 \begin{document}
 
-
 \projectfrontpage
 
+\chapter{Vectors \& Spaces}
+\section{Vectors in 3D: Equations of Lines and Planes}
+The closest distance between two lines is measured by the line which joins the two lines, and is in a direction which is perpendicular to both. This is why the cross product appears in the formula as follows in \cref{eq:distance_two_lines}.
 
-\begin{abstract}
-    \noindent
-    Brief summary of the paper.
-\end{abstract}
+\begin{equation}
+    \label{eq:distance_two_lines}
+    d = \norm{(\vec{r}_{line 1} - \vec{r}_{line 2})\cdot \hat{m}}, \quad \hat{m} = \frac{\vec{v_1} \times \vec{v_2}}{\norm{\vec{v_1} \times \vec{v_2}}}
+\end{equation}
 
-
-\chapter{Introduction}
-
-
-Purpose of the paper, historical context, necessary background information and notation.
-
-
-\chapter{Body of the Work}
-
-
-Full proofs, numerical implementations.
-Remember to cite your sources,
-such as \cite{Hel17}.
-
-\begin{theorem}[Pythagoras]
-    \label{thm:pythagoras}
-    In a right triangle,
-    the square of the hypotenuse is equal to the sum of the squares of the other two sides.
-    That is,
-    \begin{equation}
-        \label{eq:pythagoras}
-            a^2 + b^2 = c^2,
-    \end{equation}
-    where \(c\) is the length of the hypotenuse and \(a\) and \(b\) are the lengths of the two other sides.
-\end{theorem}
-
-\begin{proof}
-    Draw a figure.
-\end{proof}
-
-
-\chapter{Conclusions}
-
-
-Optional. Results, consequences, future work.
-
-\cref{tab:numbers} lists some integers satisfying \cref{eq:pythagoras} of \cref{thm:pythagoras}.
-
-\begin{table}[htbp]
-    \centering
-    \begin{tabular}{@{}ccc@{}}
-        \toprule
-        \(\boldsymbol{a}\) & \(\boldsymbol{b}\) & \(\boldsymbol{c}\)
-        \\
-        \midrule
-        3 & 4 & 5
-        \\
-        65 & 72 & 97
-        \\
-        \bottomrule
-    \end{tabular}
-    \caption{Some interesting numbers}
-    \label{tab:numbers}
-\end{table}
-
-
-\printbibliography
-
+This gives the projection of the distance between any two points on both lines, in the direction of $\hat{m}$, which is the closest distance between the two lines. 
 
 \end{document}
