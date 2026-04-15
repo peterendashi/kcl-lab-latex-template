@@ -1,44 +1,49 @@
-\documentclass[10pt,oneside,ukenglish]{memoir}
+\documentclass[10pt,oneside]{memoir}
 
 % ==============================================================================
 % 1. TOGGLE OUTPUT FORMAT (KINDLE VS A4)
 % ==============================================================================
 \newif\ifkindle
-\kindletrue % <--- CHANGE TO \kindlefalse FOR STANDARD A4 FORMATTING (change font back to 12pt for A4)
+\kindlefalse % <--- CHANGE TO \kindletrue FOR KINDLE FORMATTING
 
 \ifkindle
   %% Page layout for Kindle-style output
   \setstocksize{6.4in}{4.8in}
-  \settrimmedsize{6.4in}{4.8in}{*}
+  \settrimmedsize{\stockheight}{\stockwidth}{*}
   \settypeblocksize{5in}{4in}{*}
-  \setlrmargins{*}{*}{1}
-  \setulmargins{*}{*}{1}
 \else
   %% Page layout for standard A4 output
-  \pagea4
+  \setstocksize{297mm}{210mm} % A4 dimensions
+  \settrimmedsize{\stockheight}{\stockwidth}{*} % <-- FIXES THE MEMOIR ERROR
   \settypeblocksize{22cm}{15cm}{*}
-  \setlrmargins{*}{*}{1}
-  \setulmargins{*}{*}{1}
 \fi
+
+\setlrmargins{*}{*}{1}
+\setulmargins{*}{*}{1}
 \checkandfixthelayout
 
 % ==============================================================================
 % 2. ENCODING, LANGUAGE, AND FONTS
 % ==============================================================================
 \usepackage[T1]{fontenc}
-\usepackage[english]{babel}
+\usepackage[ukenglish]{babel} % <-- FIXES THE UNUSED OPTION WARNING
 \usepackage{lmodern}
+\usepackage{anyfontsize} % <-- HELPS WITH FONT SCALING WARNINGS
 \usepackage[scaled]{beramono}
 \usepackage[final]{microtype}
+
+% Set Helvetica (phv) as the default sans-serif font
 \renewcommand{\sfdefault}{phv}
 
 % ==============================================================================
 % 3. MATHEMATICS
 % ==============================================================================
+% Note: If mathrsfs still throws a warning, you can safely ignore it, 
+% or replace it with \usepackage[cal=rsfs]{mathalfa}
 \usepackage{amsmath, amssymb, amsthm, mathtools, mathrsfs, thmtools}
 
 % ==============================================================================
-% 4. GRAPHICS AND MISCELLANEOUS
+% 4. GRAPHICS, MISCELLANEOUS, AND CUSTOM PACKAGES
 % ==============================================================================
 \usepackage{graphicx}
 \graphicspath{{figures/}}
@@ -47,8 +52,10 @@
 \usepackage{listings}
 \lstset{basicstyle=\ttfamily, frame=tb}
 
+\usepackage{projectfp} % Custom front page package
+
 % ==============================================================================
-% 5. CROSS-REFERENCES
+% 5. CROSS-REFERENCES (MUST BE LAST)
 % ==============================================================================
 \usepackage{varioref}
 \usepackage[pdfusetitle]{hyperref}
@@ -61,9 +68,9 @@
 % ==============================================================================
 %% Chapter style
 \makechapterstyle{mychap}{
-  \renewcommand*{\chapnamefont}{\large\bfseries\fontfamily{phv}\selectfont}
-  \renewcommand*{\chapnumfont}{\large\bfseries\fontfamily{phv}\selectfont}
-  \renewcommand*{\chaptitlefont}{\fontsize{40}{42}\selectfont\bfseries\normalfont}
+  \renewcommand*{\chapnamefont}{\large\bfseries\sffamily}
+  \renewcommand*{\chapnumfont}{\large\bfseries\sffamily}
+  \renewcommand*{\chaptitlefont}{\fontsize{40}{42}\selectfont\normalfont\rmfamily}
   \renewcommand*{\printchaptername}{\chapnamefont\MakeUppercase{\chaptername}}
   \renewcommand*{\printchapternum}{\chapnumfont\space\thechapter}
   \renewcommand*{\afterchapternum}{\par\vskip 0.3\baselineskip}
@@ -71,17 +78,17 @@
 \chapterstyle{mychap}
 
 %% Section headings
-\setsecheadstyle{\large\bfseries\fontfamily{phv}\selectfont}
-\setsubsecheadstyle{\normalsize\bfseries\fontfamily{phv}\selectfont}
-\setsubsubsecheadstyle{\normalsize\bfseries\fontfamily{phv}\selectfont}
-\setparaheadstyle{\normalsize\bfseries\fontfamily{phv}\selectfont}
-\setsubparaheadstyle{\normalsize\bfseries\fontfamily{phv}\selectfont}
+\setsecheadstyle{\large\bfseries\sffamily}
+\setsubsecheadstyle{\normalsize\bfseries\sffamily}
+\setsubsubsecheadstyle{\normalsize\bfseries\sffamily}
+\setparaheadstyle{\normalsize\bfseries\sffamily}
+\setsubparaheadstyle{\normalsize\bfseries\sffamily}
 
 %% Running headers
 \renewcommand*{\chaptermark}[1]{\markboth{\chaptername\ \thechapter\space-\space #1}{}}
 \makepagestyle{myheadings}
-\makeevenhead{myheadings}{\small\bfseries\fontfamily{phv}\selectfont\leftmark}{}{\small\bfseries\fontfamily{phv}\selectfont\thepage}
-\makeoddhead{myheadings}{\small\bfseries\fontfamily{phv}\selectfont\leftmark}{}{\small\bfseries\fontfamily{phv}\selectfont\thepage}
+\makeevenhead{myheadings}{\small\bfseries\sffamily\leftmark}{}{\small\bfseries\sffamily\thepage}
+\makeoddhead{myheadings}{\small\bfseries\sffamily\leftmark}{}{\small\bfseries\sffamily\thepage}
 \makeevenfoot{myheadings}{}{}{}
 \makeoddfoot{myheadings}{}{}{}
 \pagestyle{myheadings}
@@ -136,25 +143,32 @@
 \newcommand{\0}{\mathbf{0}}
 \newcommand{\1}{\mathbf{1}}
 
-\usepackage[4CCP1300]{projectfp}
-
-\title{Helpful Notes of Linear Algebra}
+% ==============================================================================
+% DOCUMENT CONTENT
+% ==============================================================================
+\title{Stuff You Have to Memorize}
 \author{Enda Shi}
-\lecturer{Dr. Francisco Rodriguez Fortuno}
+\lecturer{All of them}
 
 \begin{document}
 
 \projectfrontpage
 
-\chapter{Vectors \& Spaces}
-\section{Vectors in 3D: Equations of Lines and Planes}
-The closest distance between two lines is measured by the line which joins the two lines, and is in a direction which is perpendicular to both. This is why the cross product appears in the formula as follows in \cref{eq:distance_two_lines}.
+\chapter{4CCP1200 Electromagnetism}
 
-\begin{equation}
-    \label{eq:distance_two_lines}
-    d = \norm{(\vec{r}_{line 1} - \vec{r}_{line 2})\cdot \hat{m}}, \quad \hat{m} = \frac{\vec{v_1} \times \vec{v_2}}{\norm{\vec{v_1} \times \vec{v_2}}}
-\end{equation}
+\section{Circuits}%
+\label{sec:Circuits}
 
-This gives the projection of the distance between any two points on both lines, in the direction of $\hat{m}$, which is the closest distance between the two lines. 
+Energy stored in a capacitor,
+\[
+U = \frac{Q^2}{2C} = \frac{1}{2}CV^2 = \frac{1}{2}QV
+.\] 
+
+Energy density (energy stored per unit volume in an electric field),
+
+\[
+U = \frac{1}{2}\varepsilon E^2
+.\] 
+Note: multiply this by the volume to find the amount of energy stored in that volume of the electric field.
 
 \end{document}
